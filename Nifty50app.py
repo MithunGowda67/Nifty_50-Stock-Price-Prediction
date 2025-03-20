@@ -30,13 +30,25 @@ st.dataframe(stock_data)
 def train_model(data, days):
     X = np.array(data["Last Sale"]).reshape(-1, 1)
     y = np.array(data["Last Sale"].shift(-days))
+
+    # Ensure X and y have enough data before splitting
+    if len(X) <= days or len(y) <= days:
+        st.error("Not enough historical data to predict. Try a lower forecast period.")
+        return []
+
     X, y = X[:-days], y[:-days]
 
+    if len(X) < 2:  # Ensure at least 2 samples
+        st.error("Dataset is too small for training.")
+        return []
+
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
     model = SVR(kernel="rbf", C=1000.0, gamma=0.0001)
     model.fit(X_train, y_train)
 
     return model.predict(X[-days:].reshape(-1, 1))
+
 
 # Predict and Display Results
 st.subheader("Predicted Stock Prices")
