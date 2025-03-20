@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 @st.cache_data
 def load_stock_info():
     try:
-        df = pd.read_csv("Nifty50_stocks_data.csv")
+        df = pd.read_csv("nifty50_stocks_data.csv")
         return df
     except FileNotFoundError:
         st.error("❌ Data file not found! Make sure 'nifty50_stocks_data.csv' is in the correct directory.")
